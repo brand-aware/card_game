@@ -22,6 +22,7 @@ public class RulesEngine {
 	private int numPlayers;
 	private Board board;
 	private Deck deck;
+	private volatile boolean gameFinished;
 	
 	public RulesEngine(Board game){
 		super();
@@ -34,6 +35,7 @@ public class RulesEngine {
 		
 		deck = new Deck();
 		players = new ArrayList<Player>();
+		gameFinished = false;
 		board = game;
 		int size = numPlayers + 1;
 		for(int x = 0; x < size; x++){
@@ -90,34 +92,28 @@ public class RulesEngine {
 	}
 	
 	public int result(ArrayList<Card> cards){
-		int max = 0;
+		int max = -1;
+		int maxValue = Integer.MIN_VALUE;
 		boolean tie = false;
-		
-		int size = cards.size();
-		for(int x = 0; x < size; x++){
+
+		for(int x = 0; x < cards.size(); x++){
 			Card card = cards.get(x);
-			if(card != null){
-				int value = card.getNumber();
-				System.out.println("number - " + value);
-				Card maxCard = cards.get(max);
-				int maxNumber = maxCard.getNumber();
-				
-				boolean same = value == maxNumber;
-				boolean start = x == 0;
-				if(value > maxNumber){
-					max = x;
-					tie = false;
-				}else if(same && !start){
-					tie = true;
-				}
+			if(card == null){
+				continue;
+			}
+
+			int value = card.getNumber();
+			System.out.println("number - " + value);
+			if(value > maxValue){
+				max = x;
+				maxValue = value;
+				tie = false;
+			}else if(value == maxValue){
+				tie = true;
 			}
 		}
-		
-		if(tie){
-			max = -1;
-		}
-		
-		return max;
+
+		return tie ? -1 : max;
 	}
 	
 	public ArrayList<Integer> getTie(ArrayList<Card> cards){
@@ -193,9 +189,17 @@ public class RulesEngine {
 		int size = cpu.getHandSize();
 		return size;
 	}
+	public int getWinningsCards(int player){
+		Player cpu = players.get(player);
+		return cpu.getWinningsSize();
+	}
 	public void cpuShuffle(int player){
 		Player cpu = players.get(player);
 		cpu.shuffle(false);
+	}
+	public void shuffleWinnings(int player){
+		Player gamePlayer = players.get(player);
+		gamePlayer.shuffle(false);
 	}
 	
 	public void playerShuffle(){
@@ -220,39 +224,31 @@ public class RulesEngine {
 	}
 	
 	public void gameover(){
-		int numCards = getPlayerCards();
-		boolean noCards = numCards == 0;
-		
-		Player player = players.get(0);
-		int extraCards = player.getWinningsSize();
-		boolean noExtra = extraCards == 0;
-		if(noCards && noExtra){
-			JOptionPane.showMessageDialog(null, "You have lost the game...");
-			System.exit(0);
+		if(gameFinished){
+			return;
 		}
-		
-		int size = players.size();
-		for(int x = 1; x < size; x++){
-			numCards = getCpuCards(x);
-			noCards = numCards == 0;
-			
-			player = players.get(x);
-			extraCards = player.getWinningsSize();
-			noExtra = extraCards == 0;
-			if(noCards && noExtra){
-				removePlayer(x);
-				JOptionPane.showMessageDialog(null, "Computer player " + x + " has been defeated");
-				if(players.size() == 1){
-					JOptionPane.showMessageDialog(null, "Congratulations!  You have won the game!");
-					System.exit(0);
-				}
+
+		int remainingPlayers = 0;
+		int winner = -1;
+		for(int x = 0; x < players.size(); x++){
+			Player player = players.get(x);
+			if(player.getHandSize() + player.getWinningsSize() > 0){
+				remainingPlayers++;
+				winner = x;
 			}
 		}
+
+		if(remainingPlayers == 1){
+			gameFinished = true;
+			board.stopForGameOver();
+			String winnerName = winner == 0 ? "You are" : "Computer " + winner + " is";
+			JOptionPane.showMessageDialog(null, winnerName + " the last player with cards.\n"
+					+ winnerName + " the winner!");
+		}
 	}
-	
-	private void removePlayer(int player){
-		players.remove(player);
-		//board.removePlayer(player);
+
+	public boolean isGameFinished(){
+		return gameFinished;
 	}
 	
 	public void showTie(){

@@ -18,10 +18,13 @@ import core.doc.IFlipActions;
 
 public class FlipActions extends DeckActions implements IFlipActions{
 
-	private TieResults tieResults;
+	private int tieRounds;
+	private int moveCounter;
+	public boolean flipFlag;
 	
 	public FlipActions(){
-
+		moveCounter = 0;
+		flipFlag = false;
 	}
 	
 	//testing method
@@ -30,12 +33,10 @@ public class FlipActions extends DeckActions implements IFlipActions{
 	}
 	
 	public void playerWins(){
+		boolean wonTie = showTie;
 		if(showTie){
 			showTie = false;
-			tieResults = new TieResults();
-			tieResults.init("player", winnings);
-			tieResults.show();
-			tieResults.loadDisplay();
+			showTieResults("player");
 			JLabel flip = cardSpots.get(0);
 			flip.setIcon(empty);
 			int size = cardSpots.size();
@@ -43,7 +44,9 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			flip = cardSpots.get(index);
 			flip.setIcon(empty);
 		}
-		JOptionPane.showMessageDialog(null, "You win!", "player wins", JOptionPane.PLAIN_MESSAGE, new ImageIcon(properties.getCompany()));
+		if(!wonTie){
+			JOptionPane.showMessageDialog(null, "You win!", "player wins", JOptionPane.PLAIN_MESSAGE, new ImageIcon(properties.getCompany()));
+		}
 		rulesEngine.saveWinnings(0, winnings);
 		int numExtra = numWinningCards.get(0);
 		int numPlayerWinningCards = numExtra + numCardsOnBoard;
@@ -56,12 +59,10 @@ public class FlipActions extends DeckActions implements IFlipActions{
 	}
 	
 	public void cpuWins(int result){
+		boolean wonTie = showTie;
 		if(showTie){
 			showTie = false;
-			tieResults = new TieResults();
-			tieResults.init("computer " + result, winnings);
-			tieResults.show();
-			tieResults.loadDisplay();
+			showTieResults("computer " + result);
 			JLabel flip = cardSpots.get(0);
 			flip.setIcon(empty);
 			int size = cardSpots.size();
@@ -69,7 +70,9 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			flip = cardSpots.get(index);
 			flip.setIcon(empty);
 		}
-		JOptionPane.showMessageDialog(null, "Computer " + result + " wins", "player lost", JOptionPane.PLAIN_MESSAGE, new ImageIcon(properties.getCompany()));
+		if(!wonTie){
+			JOptionPane.showMessageDialog(null, "Computer " + result + " wins", "player lost", JOptionPane.PLAIN_MESSAGE, new ImageIcon(properties.getCompany()));
+		}
 		rulesEngine.saveWinnings(result, winnings);
 		int numExtra = numWinningCards.get(result);
 		int numCpuWinningCards = numExtra + numCardsOnBoard;
@@ -82,19 +85,24 @@ public class FlipActions extends DeckActions implements IFlipActions{
 	}
 	
 	public void tie(){
-		JOptionPane.showMessageDialog(null, "Tie!\nFlip 3, then flip again");
+		tieRounds++;
+		JOptionPane.showMessageDialog(null, "Tie " + tieRounds + "!\nEach tied player places 3 cards, then flips again.");
 		initTie();
 		
 		ArrayList<Integer> tieResults = rulesEngine.getTie(cards);
-		int result = tieResults.get(0);
-		if(result == 0){
+		for(int player : tieResults){
+			prepareTiePlayer(player);
+		}
+		if(tieResults.contains(0)){
 			System.out.println("player flip 3");
-			flip.setText("flip (3)");
+			flip.setText("flip (" + getTieFaceDownCards(0) + ")");
 			int numCards = numDeckCards.get(0);
-			if(numCards < 3){
+			if(numCards == 0){
 				flip.setEnabled(false);
+				return;
 			}
 			tie = true;
+			flip.setEnabled(true);
 		}else{
 			System.out.println("just cpu");
 			showTie();
@@ -107,9 +115,7 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			doMove();
 		}
 		
-		if(numDeckCards.get(0) > 3){
-			flip.setEnabled(false);
-		}
+		// The player must be able to start the next tie round after the dialog closes.
 		//cards = new ArrayList<Card>();
 	}
 	
@@ -146,9 +152,7 @@ public class FlipActions extends DeckActions implements IFlipActions{
 		
 		rulesEngine.gameover();
 		
-		if(cpuNeedsShuffle()){
-			cpuShuffle();
-		}
+		cpuShuffle();
 		
 		int numExtra = numWinningCards.get(0);
 		if(numExtra > 0){
@@ -180,6 +184,9 @@ public class FlipActions extends DeckActions implements IFlipActions{
 		tie = false;
 		boolean justCpu = true;
 		ArrayList<Integer> tied = rulesEngine.getTie(cards);
+		for(int player : tied){
+			prepareTiePlayer(player);
+		}
 		int size = tied.size();
 		for(int x = 0; x < size; x++){
 			int player = tied.get(x);
@@ -189,17 +196,14 @@ public class FlipActions extends DeckActions implements IFlipActions{
 				System.out.println("player in tie");
 			}
 			
-			for(int y = 0; y < 3; y++){
+			int faceDownCards = getTieFaceDownCards(player);
+			for(int y = 0; y < faceDownCards; y++){
 				Card card;
 				
 				if(cpuNeedsShuffle()){
 					cpuShuffle();
 				}
 				
-				if(oneCardLeft()){
-					showTie = true;
-					break;
-				}
 				if(player == 0){
 					card = rulesEngine.playerPlayCard();
 					int numCards = rulesEngine.getPlayerCards();
@@ -219,21 +223,19 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			}
 		}
 		
-		if(justCpu){
-			size = tied.size();
-			for(int z = 0; z < size; z++){
-				int player = tied.get(z);
-				cpuFlipCard(player);
-				
-				getResults();
-			}
-		}
 		showTie = true;
+		if(justCpu){
+			cards = new ArrayList<Card>();
+			for(int player = 0; player <= numPlayers; player++){
+				cards.add(tied.contains(player) ? cpuFlipCard(player) : null);
+			}
+			getResults();
+		}
 	}
 	
 	public void doMove(){
-		if(move){
-			move = false;
+		if(move && flipFlag){
+			moveCounter = 0;
 			ArrayList<Integer> tieResults = null;
 			if(showTie){
 				tieResults = rulesEngine.getTie(cards);
@@ -251,17 +253,11 @@ public class FlipActions extends DeckActions implements IFlipActions{
 				cards.add(playerCard);
 			}
 			if(showTie){
-				int counter = 0;
 				int size = numPlayers + 1;
 				for(int x = 1; x < size; x++){
-					int player = tieResults.get(counter);
-					if(player == x){
-						Card cpuCard = cpuFlipCard(player);
+					if(tieResults.contains(x)){
+						Card cpuCard = cpuFlipCard(x);
 						cards.add(cpuCard);
-						counter++;
-						if(counter > tieResults.size()){
-							break;
-						}
 					}else{
 						cards.add(null);
 					}
@@ -276,8 +272,20 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			
 			numCardsOnBoard = winnings.size();
 			cardsOnBoard.setText(numCardsOnBoard + "");
-			
+			flipFlag = false;
+		}
+		if(move && moveCounter == 10) {
+			move = false;
+			moveCounter = 0;
 			getResults();
 		}
+		else {
+			moveCounter++;
+		}
+	}
+
+	private void showTieResults(String winner){
+		new TieResults(winner, winnings, tieRounds).show();
+		tieRounds = 0;
 	}
 }

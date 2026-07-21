@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -22,8 +22,7 @@ import config.ConfigTieResults;
 
 public class TieResults extends ConfigTieResults{
 
-	private TieResults tieResults = null;
-	private JFrame tiePage = null;
+	private JDialog tiePage;
 	
 	private int numCards;
 	private String winner;
@@ -34,12 +33,18 @@ public class TieResults extends ConfigTieResults{
 	
 	private JButton close;
 	
-	public TieResults(){
-		tiePage = new JFrame(HEADER);
-		tiePage.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+	public TieResults(String winner, ArrayList<Card> results, int tieRounds){
+		this.winner = winner;
+		cards = new ArrayList<Card>(results);
+		numCards = cards.size();
+		tiePage = new JDialog();
+		tiePage.setTitle(HEADER);
+		tiePage.setModal(true);
+		tiePage.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
 		ButtonHandler handler = new ButtonHandler();
 		
-		JLabel title = new JLabel(winner + MESSAGE1 + numCards + MESSAGE2);
+		JLabel title = new JLabel(winner + " won after " + tieRounds + " tie "
+				+ (tieRounds == 1 ? "round" : "rounds") + " and collects " + numCards + " cards.");
 		
 		display = new JTextArea();
 		displayScroll = new JScrollPane(display);
@@ -73,7 +78,6 @@ public class TieResults extends ConfigTieResults{
 		
 		tiePage.add(box);
 		tiePage.pack();
-		tiePage.setVisible(true);
 	}
 	
 	private class ButtonHandler implements ActionListener{
@@ -97,15 +101,8 @@ public class TieResults extends ConfigTieResults{
 		display.setEditable(false);
 	}
 	
-	public  void init(String player, ArrayList<Card> results){
-		cards = results;
-		numCards = cards.size();
-		winner = player;
-		if(tieResults == null){
-			tieResults = new TieResults();
-		}
-	}
 	public void show(){
+		tiePage.setLocationRelativeTo(null);
 		tiePage.setVisible(true);
 	}
 	public void hide(){

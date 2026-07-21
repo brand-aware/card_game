@@ -15,10 +15,12 @@ public class Mover implements Runnable{
 	@Override
 	public void run() {
 		while(true){
-			rulesEngine.doMove();
+			if(!rulesEngine.isGameFinished()){
+				rulesEngine.doMove();
+			}
 			
 			try {
-				Thread.sleep(160);
+				Thread.sleep(260);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

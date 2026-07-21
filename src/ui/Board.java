@@ -134,10 +134,18 @@ public class Board extends UtilsBoardRoot {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			if(event.getSource() == flip){
+				if(rulesEngine.getPlayerCards() == 0){
+					flip.setEnabled(false);
+					if(rulesEngine.getPlayerWinningCards() > 0){
+						shuffle.setEnabled(true);
+					}
+					return;
+				}
 				if(tie){
 					rulesEngine.showTie();
 				}else{
 					move = true;
+					flipFlag = true;
 					flip.setEnabled(false);
 				}
 			}else if(event.getSource() == shuffle){
@@ -220,18 +228,31 @@ public class Board extends UtilsBoardRoot {
 	public void doStart(){
 		rulesEngine.init(properties, numPlayers, this);
 		rulesEngine.deal();
+		numCardsOnBoard = 0;
+		cardsOnBoard.setText("0");
+		cards = new ArrayList<Card>();
+		winnings = new ArrayList<Card>();
+		tie = false;
+		showTie = false;
+		move = false;
+		flipFlag = false;
+
 		int cards;
 		for(int x = 1; x < numPlayers + 1; x++){
-			cards = numDeckCards.get(x);
+			cards = rulesEngine.getCpuCards(x);
+			numDeckCards.set(x, cards);
 			deckCardsDisplay.get(x).setText(cards + "");;
 			
-			cards = numWinningCards.get(x);
+			cards = rulesEngine.getWinningsCards(x);
+			numWinningCards.set(x, cards);
 			winningCardsDisplay.get(x).setText(cards + "");
 		}
-		cards = numDeckCards.get(0);
+		cards = rulesEngine.getPlayerCards();
+		numDeckCards.set(0, cards);
 		deckCardsDisplay.get(0).setText(cards + "");
 		
-		cards = numWinningCards.get(0);
+		cards = rulesEngine.getPlayerWinningCards();
+		numWinningCards.set(0, cards);
 		winningCardsDisplay.get(0).setText(cards + "");
 		
 		playerDeck.setIcon(new ImageIcon(properties.getCoverPath()));
@@ -243,8 +264,18 @@ public class Board extends UtilsBoardRoot {
 			deckCardsDisplay.get(x).setEnabled(true);
 			winningCardsDisplay.get(x).setEnabled(true);
 		}
-		flip.setEnabled(true);
+		for(int x = 0; x < cardSpots.size(); x++){
+			cardSpots.get(x).setIcon(empty);
+		}
+		flip.setText(FLIP_BUTTON);
+		flip.setEnabled(numDeckCards.get(0) > 0);
+		shuffle.setEnabled(false);
 		cardsOnBoard.setEnabled(true);
+		fileMenu.setEnabled(true);
+		optionsMenu.setEnabled(true);
+		helpMenu.setEnabled(true);
+		start.setEnabled(true);
+		stop.setEnabled(true);
 	}
 	
 	public void doStop(){
@@ -411,6 +442,17 @@ public class Board extends UtilsBoardRoot {
 		helpMenu.setEnabled(false);
 		flip.setEnabled(false);
 		shuffle.setEnabled(false);
+	}
+
+	public void stopForGameOver(){
+		optionsMenu.setEnabled(false);
+		helpMenu.setEnabled(false);
+		flip.setEnabled(false);
+		shuffle.setEnabled(false);
+		cardsOnBoard.setEnabled(false);
+		fileMenu.setEnabled(true);
+		start.setEnabled(true);
+		stop.setEnabled(false);
 	}
 	
 	public final void enableBoard(){
