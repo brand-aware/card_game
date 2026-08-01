@@ -80,7 +80,6 @@ public class UtilsBoardRoot extends UtilsBoardAdd{
 		currentX = (totalX / 2) - (((75 * numPlayers + 75 + 75 * 2) 
 				+ (5 * numPlayers + 5 * 2)) / 2);
 		currentY += 130 + 5;		
-		System.out.println(currentX + ", " + currentY);
 		JLabel tieLabel = new JLabel(TIE_PILE_LABEL);
 		tieLabel.setBounds(currentX, currentY, CARD_PILE_LABEL_HORIZONTAL, CARD_PILE_LABEL_VERTICAL);
 		names.add(tieLabel);

@@ -5,6 +5,8 @@
 package ui;
 
 import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,13 +22,13 @@ import javax.swing.JTextArea;
 
 import common.Card;
 import config.ConfigTieResults;
+import core.Properties;
 
 public class TieResults extends ConfigTieResults{
 
 	private JDialog tiePage;
 	
 	private int numCards;
-	private String winner;
 	private ArrayList<Card> cards;
 	
 	private JTextArea display;
@@ -33,13 +36,14 @@ public class TieResults extends ConfigTieResults{
 	
 	private JButton close;
 	
-	public TieResults(String winner, ArrayList<Card> results, int tieRounds){
-		this.winner = winner;
+	public TieResults(String winner, ArrayList<Card> results, int tieRounds, Properties properties, JFrame board){
 		cards = new ArrayList<Card>(results);
 		numCards = cards.size();
-		tiePage = new JDialog();
+		tiePage = new JDialog(board);
 		tiePage.setTitle(HEADER);
 		tiePage.setModal(true);
+		Image company = Toolkit.getDefaultToolkit().getImage(properties.getCompany());
+		tiePage.setIconImage(company);
 		tiePage.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
 		ButtonHandler handler = new ButtonHandler();
 		

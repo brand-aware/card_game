@@ -7,7 +7,6 @@ package common;
 
 import java.util.ArrayList;
 
-import common.Card;
 import common.doc.IPlayer;
 
 import core.Properties;
@@ -32,7 +31,6 @@ public class Player implements IPlayer{
 	public void addCard(int number, String suit){
 		Card card = new Card(number, suit, properties);
 		hand.add(card);
-		System.out.println("added " + hand.size());
 	}
 	
 	public int getHandSize(){

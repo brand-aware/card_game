@@ -9,6 +9,8 @@ import common.Player;
 
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import ui.Board;
@@ -54,9 +56,6 @@ public class RulesEngine {
 		int size3 = size1 * size2;
 		
 		int start = (int) (Math.random() * numPlayers);
-		System.out.println(start);
-		System.out.println(size3 + start);
-		System.out.println("dealing...");
 		int counter = start;
 		while(counter < (size3 + start)){
 			double random = Math.random();
@@ -69,7 +68,6 @@ public class RulesEngine {
 			if(!deck.hasBeenDealt(number, suit)){
 				int size = numPlayers + 1;
 				int turn = counter % size;
-				System.out.print("player: " + turn + " ");
 				deck.deal(number, suit);
 				Player player = players.get(turn);
 				player.addCard(number, suit);
@@ -103,7 +101,6 @@ public class RulesEngine {
 			}
 
 			int value = card.getNumber();
-			System.out.println("number - " + value);
 			if(value > maxValue){
 				max = x;
 				maxValue = value;
@@ -144,7 +141,6 @@ public class RulesEngine {
 			if(card != null){
 				int number = card.getNumber();
 				if(number == value){
-					System.out.println("tie player: " + y + ", card: " + number);
 					tie.add(y);
 				}
 			}
@@ -206,10 +202,10 @@ public class RulesEngine {
 		board.playerShuffle();
 	}
 	
-	public void playerShuffleChoice(){
+	public void playerShuffleChoice(JFrame board){
 		int cards = getPlayerCards();
 		if(cards > 0){
-			int choice = JOptionPane.showConfirmDialog(null, "shuffle all cards?");
+			int choice = JOptionPane.showConfirmDialog(board, "shuffle all cards?", null, 0, 0, new ImageIcon(properties.getCompany()));
 			if(choice == 0){
 				Player player = players.get(0);
 				player.shuffle(true);
@@ -223,7 +219,7 @@ public class RulesEngine {
 		}
 	}
 	
-	public void gameover(){
+	public void gameover(JFrame boardPage){
 		if(gameFinished){
 			return;
 		}
@@ -242,8 +238,8 @@ public class RulesEngine {
 			gameFinished = true;
 			board.stopForGameOver();
 			String winnerName = winner == 0 ? "You are" : "Computer " + winner + " is";
-			JOptionPane.showMessageDialog(null, winnerName + " the last player with cards.\n"
-					+ winnerName + " the winner!");
+			JOptionPane.showMessageDialog(boardPage, winnerName + " the last player with cards.\n"
+					+ winnerName + " the winner!", winnerName, winner, new ImageIcon(properties.getCompany()));
 		}
 	}
 

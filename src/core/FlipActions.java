@@ -7,6 +7,7 @@ package core;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -32,7 +33,7 @@ public class FlipActions extends DeckActions implements IFlipActions{
 		return numCardsOnBoard;
 	}
 	
-	public void playerWins(){
+	public void playerWins(JFrame board){
 		boolean wonTie = showTie;
 		if(showTie){
 			showTie = false;
@@ -45,7 +46,7 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			flip.setIcon(empty);
 		}
 		if(!wonTie){
-			JOptionPane.showMessageDialog(null, "You win!", "player wins", JOptionPane.PLAIN_MESSAGE, new ImageIcon(properties.getCompany()));
+			JOptionPane.showMessageDialog(board, "You win!", "player wins", JOptionPane.PLAIN_MESSAGE, new ImageIcon(properties.getCompany()));
 		}
 		rulesEngine.saveWinnings(0, winnings);
 		int numExtra = numWinningCards.get(0);
@@ -58,7 +59,7 @@ public class FlipActions extends DeckActions implements IFlipActions{
 		winnings = new ArrayList<Card>();
 	}
 	
-	public void cpuWins(int result){
+	public void cpuWins(int result, JFrame board){
 		boolean wonTie = showTie;
 		if(showTie){
 			showTie = false;
@@ -71,7 +72,7 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			flip.setIcon(empty);
 		}
 		if(!wonTie){
-			JOptionPane.showMessageDialog(null, "Computer " + result + " wins", "player lost", JOptionPane.PLAIN_MESSAGE, new ImageIcon(properties.getCompany()));
+			JOptionPane.showMessageDialog(board, "Computer " + result + " wins", "player lost", JOptionPane.PLAIN_MESSAGE, new ImageIcon(properties.getCompany()));
 		}
 		rulesEngine.saveWinnings(result, winnings);
 		int numExtra = numWinningCards.get(result);
@@ -84,9 +85,9 @@ public class FlipActions extends DeckActions implements IFlipActions{
 		winnings = new ArrayList<Card>();
 	}
 	
-	public void tie(){
+	public void tie() {
 		tieRounds++;
-		JOptionPane.showMessageDialog(null, "Tie " + tieRounds + "!\nEach tied player places 3 cards, then flips again.");
+		JOptionPane.showMessageDialog(boardPage, "Tie " + tieRounds + "!\nEach tied player places 3 cards, then flips again.", CPU_PILE_PREFIX, moveCounter, new ImageIcon(properties.getCompany()));
 		initTie();
 		
 		ArrayList<Integer> tieResults = rulesEngine.getTie(cards);
@@ -94,7 +95,6 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			prepareTiePlayer(player);
 		}
 		if(tieResults.contains(0)){
-			System.out.println("player flip 3");
 			flip.setText("flip (" + getTieFaceDownCards(0) + ")");
 			int numCards = numDeckCards.get(0);
 			if(numCards == 0){
@@ -104,7 +104,6 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			tie = true;
 			flip.setEnabled(true);
 		}else{
-			System.out.println("just cpu");
 			showTie();
 			move = true;
 			try {
@@ -145,12 +144,12 @@ public class FlipActions extends DeckActions implements IFlipActions{
 		}
 		
 		if(result == 0){
-			playerWins();
+			playerWins(boardPage);
 		}else if(result != -1){
-			cpuWins(result);
+			cpuWins(result, boardPage);
 		}
 		
-		rulesEngine.gameover();
+		rulesEngine.gameover(boardPage);
 		
 		cpuShuffle();
 		
@@ -193,7 +192,6 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			if(player == 0){
 				flip.setText("flip");
 				justCpu = false;
-				System.out.println("player in tie");
 			}
 			
 			int faceDownCards = getTieFaceDownCards(player);
@@ -274,7 +272,7 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			cardsOnBoard.setText(numCardsOnBoard + "");
 			flipFlag = false;
 		}
-		if(move && moveCounter == 10) {
+		if(move && moveCounter == 3) {
 			move = false;
 			moveCounter = 0;
 			getResults();
@@ -285,7 +283,7 @@ public class FlipActions extends DeckActions implements IFlipActions{
 	}
 
 	private void showTieResults(String winner){
-		new TieResults(winner, winnings, tieRounds).show();
+		new TieResults(winner, winnings, tieRounds, properties, boardPage).show();
 		tieRounds = 0;
 	}
 }

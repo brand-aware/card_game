@@ -31,7 +31,6 @@ public class Deck implements IDeck{
 			cards.get(number).add(suit);
 		}
 		dealtCards++;
-		System.out.print(dealtCards + " - " + number + "," + suit + " - ");
 	}
 	
 	public boolean hasBeenDealt(int number, String suit){

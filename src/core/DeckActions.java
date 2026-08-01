@@ -144,7 +144,7 @@ public class DeckActions extends CommonDisplay implements IDeckActions{
 	public void playerShuffle(){
 		shuffle.setEnabled(false);
 		flip.setEnabled(true);
-		rulesEngine.playerShuffleChoice();
+		rulesEngine.playerShuffleChoice(boardPage);
 		int extraCards = rulesEngine.getPlayerWinningCards();
 		numWinningCards.set(0, extraCards);
 		JTextField extraDisplay = winningCardsDisplay.get(0);
