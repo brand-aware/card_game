@@ -283,7 +283,7 @@ public class FlipActions extends DeckActions implements IFlipActions{
 	}
 
 	private void showTieResults(String winner){
-		new TieResults(winner, winnings, tieRounds, properties, boardPage).show();
+		new TieResults(winner, winnings, tieRounds, properties, boardPage).show(boardPage);
 		tieRounds = 0;
 	}
 }

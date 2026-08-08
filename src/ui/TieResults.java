@@ -39,10 +39,8 @@ public class TieResults extends ConfigTieResults{
 	public TieResults(String winner, ArrayList<Card> results, int tieRounds, Properties properties, JFrame board){
 		cards = new ArrayList<Card>(results);
 		numCards = cards.size();
-		tiePage = new JDialog(board);
-		tiePage.setTitle(HEADER);
-		tiePage.setModal(true);
 		Image company = Toolkit.getDefaultToolkit().getImage(properties.getCompany());
+		tiePage = new JDialog(board, HEADER, true);
 		tiePage.setIconImage(company);
 		tiePage.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
 		ButtonHandler handler = new ButtonHandler();
@@ -105,8 +103,8 @@ public class TieResults extends ConfigTieResults{
 		display.setEditable(false);
 	}
 	
-	public void show(){
-		tiePage.setLocationRelativeTo(null);
+	public void show(JFrame board){
+		tiePage.setLocationRelativeTo(board);
 		tiePage.setVisible(true);
 	}
 	public void hide(){
