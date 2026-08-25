@@ -6,7 +6,6 @@ package ui;
 
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -21,6 +20,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import common.Card;
+import common.RoundedImageIcon;
+import common.RoundedBorder;
+import common.RoundedButton;
 import config.ConfigTieResults;
 import core.Properties;
 
@@ -39,7 +41,7 @@ public class TieResults extends ConfigTieResults{
 	public TieResults(String winner, ArrayList<Card> results, int tieRounds, Properties properties, JFrame board){
 		cards = new ArrayList<Card>(results);
 		numCards = cards.size();
-		Image company = Toolkit.getDefaultToolkit().getImage(properties.getCompany());
+		Image company = new RoundedImageIcon(properties.getCompany()).getImage();
 		tiePage = new JDialog(board, HEADER, true);
 		tiePage.setIconImage(company);
 		tiePage.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
@@ -50,13 +52,14 @@ public class TieResults extends ConfigTieResults{
 		
 		display = new JTextArea();
 		displayScroll = new JScrollPane(display);
+		displayScroll.setBorder(new RoundedBorder(java.awt.Color.GRAY));
 		displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		displayScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		displayScroll.setPreferredSize(new Dimension(RESULTS_DISPLAY_HORIZONTAL, RESULTS_DISPLAY_VERTICAL));
 		
 		loadDisplay();
 		
-		close = new JButton(CLOSE_BUTTON_LABEL);
+		close = new RoundedButton(CLOSE_BUTTON_LABEL);
 		close.addActionListener(handler);
 		close.setPreferredSize(new Dimension(CLOSE_BUTTON_HORIZONTAL, CLOSE_BUTTON_VERTICAL));
 		

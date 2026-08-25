@@ -11,7 +11,6 @@ import common.doc.IDeck;
 
 public class Deck implements IDeck{
 	
-	private int dealtCards = 0;
 	private int[] values = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
 	private String[] suits = {"clubs", "diamonds", "hearts", "spades"};
 	private ConcurrentHashMap<Integer, ArrayList<String>> cards;
@@ -30,7 +29,6 @@ public class Deck implements IDeck{
 			cards.put(number, new ArrayList<String>());
 			cards.get(number).add(suit);
 		}
-		dealtCards++;
 	}
 	
 	public boolean hasBeenDealt(int number, String suit){

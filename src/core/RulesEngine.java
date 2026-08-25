@@ -6,10 +6,10 @@ package core;
 
 import common.Deck;
 import common.Player;
+import common.RoundedImageIcon;
 
 import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -205,7 +205,7 @@ public class RulesEngine {
 	public void playerShuffleChoice(JFrame board){
 		int cards = getPlayerCards();
 		if(cards > 0){
-			int choice = JOptionPane.showConfirmDialog(board, "shuffle all cards?", null, 0, 0, new ImageIcon(properties.getCompany()));
+			int choice = JOptionPane.showConfirmDialog(board, "shuffle all cards?", null, 0, 0, new RoundedImageIcon(properties.getCompany()));
 			if(choice == 0){
 				Player player = players.get(0);
 				player.shuffle(true);
@@ -239,7 +239,7 @@ public class RulesEngine {
 			board.stopForGameOver();
 			String winnerName = winner == 0 ? "You are" : "Computer " + winner + " is";
 			JOptionPane.showMessageDialog(boardPage, winnerName + " the last player with cards.\n"
-					+ winnerName + " the winner!", winnerName, winner, new ImageIcon(properties.getCompany()));
+					+ winnerName + " the winner!", winnerName, winner, new RoundedImageIcon(properties.getCompany()));
 		}
 	}
 

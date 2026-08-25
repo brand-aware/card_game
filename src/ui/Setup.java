@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Box;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -19,6 +18,8 @@ import javax.swing.JPanel;
 import config.ConfigSetup;
 
 import core.Properties;
+import common.RoundedImageIcon;
+import common.RoundedButton;
 
 
 public class Setup extends ConfigSetup{
@@ -43,7 +44,7 @@ public class Setup extends ConfigSetup{
 	public void createPage(){
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		ButtonHandler handler = new ButtonHandler();
-		setFrameIcon(new ImageIcon(properties.getCompanyIframe()));
+		setFrameIcon(new RoundedImageIcon(properties.getCompanyIframe()));
 		
 		JLabel directions = new JLabel(DIRECTIONS);
 		directions.setPreferredSize(new Dimension(DIRECTIONS_HORIZONTAL, DIRECTIONS_VERTICAL));
@@ -55,11 +56,11 @@ public class Setup extends ConfigSetup{
 		JLabel comboOffset = new JLabel();
 		comboOffset.setPreferredSize(new Dimension(PLAYER_COMBO_SPACING_RIGHT_HORIZONTAL, PLAYER_COMBO_SPACING_RIGHT_VERTICAL));
 		
-		ok = new JButton(OK_BUTTON_LABEL);
+		ok = new RoundedButton(OK_BUTTON_LABEL);
 		ok.setPreferredSize(new Dimension(OK_BUTTON_HORIZONTAL, OK_BUTTON_VERTICAL));
 		ok.addActionListener(handler);
 		
-		cancel = new JButton("cancel");
+		cancel = new RoundedButton("cancel");
 		cancel.setPreferredSize(new Dimension(100, 30));
 		cancel.addActionListener(handler);
 		

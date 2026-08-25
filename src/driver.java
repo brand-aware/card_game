@@ -12,7 +12,7 @@ public class driver {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Properties properties = new Properties(System.getProperty("user.dir"));
+		Properties properties = new Properties();
 		Board board = new Board();
 		board.init(properties);
 		Thread thread = new Thread(new Mover(board.getRulesEngine()));

@@ -20,10 +20,9 @@ public class Properties implements IProperties{
 	private String company;
 	private String company_iframe;
 	private String background;
-	private String rootDir;
-	
-	public Properties(String dir){
-		rootDir = dir;
+
+	public Properties(){
+		String rootDir = System.getProperty("user.dir");
 		coverPath = rootDir + File.separator + "cards" + File.separator + "cover.png";
 		emptyPath = rootDir + File.separator + "cards" + File.separator + "empty.png";
 		

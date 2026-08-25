@@ -6,7 +6,6 @@ package core;
 
 import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -15,6 +14,7 @@ import javax.swing.JTextField;
 import ui.TieResults;
 
 import common.Card;
+import common.RoundedImageIcon;
 import core.doc.IFlipActions;
 
 public class FlipActions extends DeckActions implements IFlipActions{
@@ -46,7 +46,7 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			flip.setIcon(empty);
 		}
 		if(!wonTie){
-			JOptionPane.showMessageDialog(board, "You win!", "player wins", JOptionPane.PLAIN_MESSAGE, new ImageIcon(properties.getCompany()));
+			JOptionPane.showMessageDialog(board, "You win!", "player wins", JOptionPane.PLAIN_MESSAGE, new RoundedImageIcon(properties.getCompany()));
 		}
 		rulesEngine.saveWinnings(0, winnings);
 		int numExtra = numWinningCards.get(0);
@@ -72,7 +72,7 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			flip.setIcon(empty);
 		}
 		if(!wonTie){
-			JOptionPane.showMessageDialog(board, "Computer " + result + " wins", "player lost", JOptionPane.PLAIN_MESSAGE, new ImageIcon(properties.getCompany()));
+			JOptionPane.showMessageDialog(board, "Computer " + result + " wins", "player lost", JOptionPane.PLAIN_MESSAGE, new RoundedImageIcon(properties.getCompany()));
 		}
 		rulesEngine.saveWinnings(result, winnings);
 		int numExtra = numWinningCards.get(result);
@@ -87,7 +87,7 @@ public class FlipActions extends DeckActions implements IFlipActions{
 	
 	public void tie() {
 		tieRounds++;
-		JOptionPane.showMessageDialog(boardPage, "Tie " + tieRounds + "!\nEach tied player places 3 cards, then flips again.", CPU_PILE_PREFIX, moveCounter, new ImageIcon(properties.getCompany()));
+		JOptionPane.showMessageDialog(boardPage, "Tie " + tieRounds + "!\nEach tied player places 3 cards, then flips again.", CPU_PILE_PREFIX, moveCounter, new RoundedImageIcon(properties.getCompany()));
 		initTie();
 		
 		ArrayList<Integer> tieResults = rulesEngine.getTie(cards);

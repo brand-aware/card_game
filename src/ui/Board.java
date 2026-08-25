@@ -6,7 +6,6 @@ package ui;
 
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -23,6 +22,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import common.Card;
+import common.RoundedButton;
+import common.RoundedImageIcon;
+import common.RoundedTextField;
 import utils.UtilsBoardRoot;
 
 import core.Properties;
@@ -45,7 +47,7 @@ public class Board extends UtilsBoardRoot {
 		boardPage = new JFrame("card_game");
 		boardPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		boardPage.setResizable(false);
-		Image company = Toolkit.getDefaultToolkit().getImage(properties.getCompany());
+		Image company = new RoundedImageIcon(properties.getCompany()).getImage();
 		boardPage.setIconImage(company);
 		
 		menu = new JMenuBar();
@@ -79,14 +81,14 @@ public class Board extends UtilsBoardRoot {
 		boardPage.setPreferredSize(new Dimension(totalX + (numPlayers * 10), totalY));
 		
 		String backgroundPath = properties.getBackground();
-		ImageIcon backgroundIcon = new ImageIcon(backgroundPath);
+		ImageIcon backgroundIcon = new RoundedImageIcon(backgroundPath);
 		JLabel background = new JLabel();
 		background.setIcon(backgroundIcon);
 		background.setBounds(0, 0, 1300, 1100);
 		desktopPane.add(background);
 		
 		String logoPath = properties.getLogo();
-		ImageIcon logoIcon = new ImageIcon(logoPath);
+		ImageIcon logoIcon = new RoundedImageIcon(logoPath);
 		logo = new JLabel();
 		logo.setIcon(logoIcon);
 		currentX = (totalX / 2) - (376 / 2);
@@ -95,9 +97,9 @@ public class Board extends UtilsBoardRoot {
 		desktopPane.moveToFront(logo);
 		
 		String coverPath = properties.getCoverPath();
-		cover = new ImageIcon(coverPath);
+		cover = new RoundedImageIcon(coverPath);
 		String emptyPath = properties.getEmptyPath();
-		empty = new ImageIcon(emptyPath);
+		empty = new RoundedImageIcon(emptyPath);
 		
 		rulesEngine.init(properties, numPlayers, this);
 		rulesEngine.deal();
@@ -171,7 +173,7 @@ public class Board extends UtilsBoardRoot {
 						+ "contact:\nmike.drummond.802@hotmail.com", 
 						"about", 
 						JOptionPane.PLAIN_MESSAGE, 
-						new ImageIcon(properties.getCompany()));
+						new RoundedImageIcon(properties.getCompany()));
 			}
 		}	
 	}
@@ -255,9 +257,9 @@ public class Board extends UtilsBoardRoot {
 		numWinningCards.set(0, cards);
 		winningCardsDisplay.get(0).setText(cards + "");
 		
-		playerDeck.setIcon(new ImageIcon(properties.getCoverPath()));
+		playerDeck.setIcon(new RoundedImageIcon(properties.getCoverPath()));
 		for(int x = 0; x < decks.size(); x++){
-			decks.get(x).setIcon(new ImageIcon(properties.getCoverPath()));
+			decks.get(x).setIcon(new RoundedImageIcon(properties.getCoverPath()));
 		}
 		
 		for(int x = 0; x < deckCardsDisplay.size(); x++){
@@ -288,9 +290,9 @@ public class Board extends UtilsBoardRoot {
 		deckCardsDisplay.get(0).setText("0");
 		winningCardsDisplay.get(0).setText("0");
 		
-		playerDeck.setIcon(new ImageIcon(properties.getEmptyPath()));
+		playerDeck.setIcon(new RoundedImageIcon(properties.getEmptyPath()));
 		for(int x = 0; x < decks.size(); x++){
-			decks.get(x).setIcon(new ImageIcon(properties.getEmptyPath()));
+			decks.get(x).setIcon(new RoundedImageIcon(properties.getEmptyPath()));
 		}
 		
 		for(int x = 0; x < deckCardsDisplay.size(); x++){
@@ -329,7 +331,7 @@ public class Board extends UtilsBoardRoot {
 	
 	public void createLogo(){
 		String logoPath = properties.getLogo();
-		ImageIcon logoIcon = new ImageIcon(logoPath);
+		ImageIcon logoIcon = new RoundedImageIcon(logoPath);
 		logo = new JLabel();
 		logo.setIcon(logoIcon);
 		currentX = (totalX / 2) - (376 / 2);
@@ -346,7 +348,7 @@ public class Board extends UtilsBoardRoot {
 		playerDeck.setBounds(currentX, currentY, 75, 130);
 		playerDeck.setIcon(cover);
 		
-		cardsOnBoard = new JTextField();
+		cardsOnBoard = new RoundedTextField();
 		int cobX = 25;
 		if(numPlayers == 3){
 			cobX = (totalX / 2) - (((75 * numPlayers + 75 + 75 * 2) 
@@ -359,12 +361,12 @@ public class Board extends UtilsBoardRoot {
 				
 		int tempY = currentY + (130 / 2) - (FLIP_BUTTON_VERTICAL / 2);
 		currentX += 75 + 5;
-		flip = new JButton(FLIP_BUTTON);
+		flip = new RoundedButton(FLIP_BUTTON);
 		flip.setBounds(currentX, tempY, FLIP_BUTTON_HORIZONTAL, FLIP_BUTTON_VERTICAL);
 		flip.addActionListener(handler);
 		
 		currentX += FLIP_BUTTON_HORIZONTAL + 5;
-		shuffle = new JButton(SHUFFLE_BUTTON);
+		shuffle = new RoundedButton(SHUFFLE_BUTTON);
 		shuffle.setBounds(currentX, tempY, SHUFFLE_BUTTON_HORIZONTAL, SHUFFLE_BUTTON_VERTICAL);
 		shuffle.addActionListener(handler);
 		shuffle.setEnabled(false);
@@ -388,7 +390,7 @@ public class Board extends UtilsBoardRoot {
 		
 		currentY += WINNINGS_DISPLAY_LABEL_VERTICAL + 5;
 		currentX = (totalX / 2) - ((DECK_DISPLAY_HORIZONTAL + WINNINGS_DISPLAY_HORIZONTAL) / 2);
-		JTextField deckCards = new JTextField();
+		JTextField deckCards = new RoundedTextField();
 		deckCards.setBounds(currentX, currentY, DECK_DISPLAY_HORIZONTAL, DECK_DISPLAY_VERTICAL);
 		cards = numDeckCards.get(0);
 		deckCards.setText(cards + "");
@@ -396,7 +398,7 @@ public class Board extends UtilsBoardRoot {
 		deckCardsDisplay.add(0, deckCards);
 		currentX += DECK_DISPLAY_HORIZONTAL + 5;
 		
-		JTextField winningCards = new JTextField();
+		JTextField winningCards = new RoundedTextField();
 		winningCards.setBounds(currentX, currentY, WINNINGS_DISPLAY_HORIZONTAL, WINNINGS_DISPLAY_VERTICAL);
 		cards = numWinningCards.get(0);
 		winningCards.setText(cards + "");

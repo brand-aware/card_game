@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import common.RoundedTextField;
+
 public class UtilsBoardRoot extends UtilsBoardAdd{
 	
 	public void initializeCounters(){
@@ -41,7 +43,7 @@ public class UtilsBoardRoot extends UtilsBoardAdd{
 				WINNINGS_DISPLAY_HORIZONTAL) * numPlayers) + 
 				(100 * (numPlayers - 1)))/2);
 		for(int x = 1; x < numPlayers + 1; x++){
-			JTextField deckCards = new JTextField();
+			JTextField deckCards = new RoundedTextField();
 			deckCards.setBounds(currentX, currentY, DECK_DISPLAY_HORIZONTAL, DECK_DISPLAY_VERTICAL);
 			int cards = numDeckCards.get(x);
 			deckCards.setText(cards + "");
@@ -49,7 +51,7 @@ public class UtilsBoardRoot extends UtilsBoardAdd{
 			deckCardsDisplay.add(deckCards);
 			currentX += DECK_DISPLAY_HORIZONTAL + 5;
 			
-			JTextField winningCards = new JTextField();
+			JTextField winningCards = new RoundedTextField();
 			winningCards.setBounds(currentX, currentY, WINNINGS_DISPLAY_HORIZONTAL, WINNINGS_DISPLAY_VERTICAL);
 			cards = numWinningCards.get(x);
 			winningCards.setText(cards + "");

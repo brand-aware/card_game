@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 
 import common.Card;
 import common.CommonDisplay;
+import common.RoundedImageIcon;
 import core.doc.IDeckActions;
 
 public class DeckActions extends CommonDisplay implements IDeckActions{
@@ -24,7 +25,7 @@ public class DeckActions extends CommonDisplay implements IDeckActions{
 			return null;
 		}
 		String path = cpuCard.getPath();
-		ImageIcon card = new ImageIcon(path);
+		ImageIcon card = new RoundedImageIcon(path);
 		int playerIndex = player + 1;
 		JLabel selectedCard = cardSpots.get(playerIndex);
 		selectedCard.setIcon(card);
@@ -45,7 +46,7 @@ public class DeckActions extends CommonDisplay implements IDeckActions{
 			return null;
 		}
 		String path = playerCard.getPath();
-		ImageIcon card = new ImageIcon(path);
+		ImageIcon card = new RoundedImageIcon(path);
 		JLabel playerFlip = cardSpots.get(1);
 		playerFlip.setIcon(card);
 		winnings.add(playerCard);
