@@ -4,6 +4,7 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 
@@ -13,7 +14,7 @@ public class RoundedImageIcon extends ImageIcon {
 	private static final long serialVersionUID = 1L;
 	private static final int CORNER_RADIUS = 12;
 
-	public RoundedImageIcon(String path) {
+	public RoundedImageIcon(URL path) {
 		super(path);
 		setImage(createRoundedImage());
 	}

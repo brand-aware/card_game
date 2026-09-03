@@ -1,5 +1,7 @@
 package common.doc;
 
+import java.net.URL;
+
 /**
  *  Stores all data associated with a standard playing card, along
  *  with known rules allowing for machine interpretation/comparison.
@@ -27,7 +29,7 @@ public interface ICard {
 	 * 
 	 * @return String path
 	 */
-	public String getPath();
+	public URL getPath();
 	
 	/**
 	 * Returns a textual description of the card,

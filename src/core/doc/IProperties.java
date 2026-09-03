@@ -1,5 +1,7 @@
 package core.doc;
 
+import java.net.URL;
+
 public interface IProperties {
 
 	/**
@@ -17,7 +19,7 @@ public interface IProperties {
 	 * 
 	 * @return String path
 	 */
-	public String getCoverPath();
+	public URL getCoverPath();
 	
 	/**
 	 * Returns the file location for the placeholder
@@ -26,13 +28,13 @@ public interface IProperties {
 	 * 
 	 * @return String path
 	 */
-	public String getEmptyPath();
+	public URL getEmptyPath();
 	
 	/**
 	 * Returns the path to the game logo.
 	 * 
 	 * @return String path
 	 */
-	public String getLogo();
+	public URL getLogo();
 	
 }

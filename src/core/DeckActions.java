@@ -4,6 +4,8 @@
  */
 package core;
 
+import java.net.URL;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -24,7 +26,7 @@ public class DeckActions extends CommonDisplay implements IDeckActions{
 		if(cpuCard == null){
 			return null;
 		}
-		String path = cpuCard.getPath();
+		URL path = cpuCard.getPath();
 		ImageIcon card = new RoundedImageIcon(path);
 		int playerIndex = player + 1;
 		JLabel selectedCard = cardSpots.get(playerIndex);
@@ -45,7 +47,7 @@ public class DeckActions extends CommonDisplay implements IDeckActions{
 			flip.setEnabled(false);
 			return null;
 		}
-		String path = playerCard.getPath();
+		URL path = playerCard.getPath();
 		ImageIcon card = new RoundedImageIcon(path);
 		JLabel playerFlip = cardSpots.get(1);
 		playerFlip.setIcon(card);

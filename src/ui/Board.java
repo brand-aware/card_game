@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -79,14 +80,14 @@ public class Board extends UtilsBoardRoot {
 		calcTotalY();
 		boardPage.setPreferredSize(new Dimension(totalX + (numPlayers * 10), totalY));
 		
-		String backgroundPath = properties.getBackground();
+		URL backgroundPath = properties.getBackground();
 		ImageIcon backgroundIcon = new RoundedImageIcon(backgroundPath);
 		JLabel background = new JLabel();
 		background.setIcon(backgroundIcon);
 		background.setBounds(0, 0, 1300, 1100);
 		desktopPane.add(background);
 		
-		String logoPath = properties.getLogo();
+		URL logoPath = properties.getLogo();
 		ImageIcon logoIcon = new RoundedImageIcon(logoPath);
 		logo = new JLabel();
 		logo.setIcon(logoIcon);
@@ -95,9 +96,9 @@ public class Board extends UtilsBoardRoot {
 		desktopPane.add(logo);
 		desktopPane.moveToFront(logo);
 		
-		String coverPath = properties.getCoverPath();
+		URL coverPath = properties.getCoverPath();
 		cover = new RoundedImageIcon(coverPath);
-		String emptyPath = properties.getEmptyPath();
+		URL emptyPath = properties.getEmptyPath();
 		empty = new RoundedImageIcon(emptyPath);
 		
 		rulesEngine.init(properties, numPlayers, this);
@@ -329,7 +330,7 @@ public class Board extends UtilsBoardRoot {
 	}
 	
 	public void createLogo(){
-		String logoPath = properties.getLogo();
+		URL logoPath = properties.getLogo();
 		ImageIcon logoIcon = new RoundedImageIcon(logoPath);
 		logo = new JLabel();
 		logo.setIcon(logoIcon);

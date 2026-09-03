@@ -4,60 +4,60 @@
  */
 package core;
 
-import java.io.File;
+import java.net.URL;
 import java.util.concurrent.ConcurrentHashMap;
 
 import core.doc.IProperties;
 
 public class Properties implements IProperties{
 	
-	private String coverPath;
-	private String emptyPath;
+	private URL coverPath;
+	private URL emptyPath;
 	private ConcurrentHashMap<String, String> suitPaths = 
 			new ConcurrentHashMap<String, String>();
 	
-	private String logo;
-	private String company;
-	private String company_iframe;
-	private String background;
+	private URL logo;
+	private URL company;
+	private URL company_iframe;
+	private URL background;
 
 	public Properties(){
-		String rootDir = System.getProperty("user.dir");
-		coverPath = rootDir + File.separator + "cards" + File.separator + "cover.png";
-		emptyPath = rootDir + File.separator + "cards" + File.separator + "empty.png";
+		String rootDir = "/";
+		coverPath = getClass().getResource(rootDir + "cards/cover.png");
+		emptyPath = getClass().getResource(rootDir + "cards/empty.png");
 		
-		String cards = rootDir + File.separator + "cards" + File.separator;
+		String cards = rootDir + "cards" + "/";
 		suitPaths.put("clubs", cards + "clubs");
 		suitPaths.put("diamonds", cards + "diamonds");
 		suitPaths.put("hearts", cards + "hearts");
 		suitPaths.put("spades", cards + "spades");
 		
-		logo = rootDir + File.separator + "img" + File.separator + "logo.png";
-		company = rootDir + File.separator + "img" + File.separator + "company.png";
-		company_iframe = rootDir + File.separator + "img" + File.separator + "company_iframe.png";
-		background = rootDir + File.separator + "img" + File.separator + "background.png";
+		logo = getClass().getResource(rootDir + "img/logo.png");
+		company = getClass().getResource(rootDir + "img/company.png");
+		company_iframe = getClass().getResource(rootDir + "img/company_iframe.png");
+		background = getClass().getResource(rootDir + "img/background.png");
 	}
 
 	public String suitPath(String suit){
 		return suitPaths.get(suit);
 	}
 	
-	public String getCoverPath(){
+	public URL getCoverPath(){
 		return coverPath;
 	}
-	public String getEmptyPath(){
+	public URL getEmptyPath(){
 		return emptyPath;
 	}
-	public String getLogo(){
+	public URL getLogo(){
 		return logo;
 	}
-	public String getCompany(){
+	public URL getCompany(){
 		return company;
 	}
-	public String getCompanyIframe(){
+	public URL getCompanyIframe(){
 		return company_iframe;
 	}
-	public String getBackground(){
+	public URL getBackground(){
 		return background;
 	}
 }
