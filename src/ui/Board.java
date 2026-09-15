@@ -228,6 +228,7 @@ public class Board extends UtilsBoardRoot {
 	}
 	
 	public void doStart(){
+		autoPlay = false;
 		rulesEngine.init(properties, numPlayers, this);
 		rulesEngine.deal();
 		numCardsOnBoard = 0;
@@ -281,6 +282,9 @@ public class Board extends UtilsBoardRoot {
 	}
 	
 	public void doStop(){
+		autoPlay = false;
+		move = false;
+		flipFlag = false;
 		rulesEngine.init(properties, numPlayers, this);
 		for(int x = 1; x < numPlayers + 1; x++){
 			deckCardsDisplay.get(x).setText("0");;

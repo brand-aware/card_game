@@ -22,6 +22,7 @@ public class FlipActions extends DeckActions implements IFlipActions{
 	private int tieRounds;
 	private int moveCounter;
 	public boolean flipFlag;
+	protected boolean autoPlay;
 	
 	public FlipActions(){
 		moveCounter = 0;
@@ -34,7 +35,7 @@ public class FlipActions extends DeckActions implements IFlipActions{
 	}
 	
 	public void playerWins(JFrame board){
-		boolean wonTie = showTie;
+		JOptionPane.showMessageDialog(board, "You win!", "player wins", JOptionPane.PLAIN_MESSAGE, new RoundedImageIcon(properties.getCompany()));
 		if(showTie){
 			showTie = false;
 			showTieResults("player");
@@ -44,9 +45,6 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			int index = size - 1;
 			flip = cardSpots.get(index);
 			flip.setIcon(empty);
-		}
-		if(!wonTie){
-			JOptionPane.showMessageDialog(board, "You win!", "player wins", JOptionPane.PLAIN_MESSAGE, new RoundedImageIcon(properties.getCompany()));
 		}
 		rulesEngine.saveWinnings(0, winnings);
 		int numExtra = numWinningCards.get(0);
@@ -60,7 +58,10 @@ public class FlipActions extends DeckActions implements IFlipActions{
 	}
 	
 	public void cpuWins(int result, JFrame board){
-		boolean wonTie = showTie;
+		boolean cpuOnlyTie = showTie && cards.get(0) == null;
+		if(!cpuOnlyTie && !autoPlay){
+			JOptionPane.showMessageDialog(board, "Computer " + result + " wins", "player lost", JOptionPane.PLAIN_MESSAGE, new RoundedImageIcon(properties.getCompany()));
+		}
 		if(showTie){
 			showTie = false;
 			showTieResults("computer " + result);
@@ -70,9 +71,6 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			int index = size - 1;
 			flip = cardSpots.get(index);
 			flip.setIcon(empty);
-		}
-		if(!wonTie){
-			JOptionPane.showMessageDialog(board, "Computer " + result + " wins", "player lost", JOptionPane.PLAIN_MESSAGE, new RoundedImageIcon(properties.getCompany()));
 		}
 		rulesEngine.saveWinnings(result, winnings);
 		int numExtra = numWinningCards.get(result);
@@ -87,7 +85,9 @@ public class FlipActions extends DeckActions implements IFlipActions{
 	
 	public void tie() {
 		tieRounds++;
-		JOptionPane.showMessageDialog(boardPage, "Tie " + tieRounds + "!\nEach tied player places 3 cards, then flips again.", CPU_PILE_PREFIX, moveCounter, new RoundedImageIcon(properties.getCompany()));
+		if(!autoPlay){
+			JOptionPane.showMessageDialog(boardPage, "Tie " + tieRounds + "!\nEach tied player places 3 cards, then flips again.", CPU_PILE_PREFIX, moveCounter, new RoundedImageIcon(properties.getCompany()));
+		}
 		initTie();
 		
 		ArrayList<Integer> tieResults = rulesEngine.getTie(cards);
@@ -105,13 +105,6 @@ public class FlipActions extends DeckActions implements IFlipActions{
 			flip.setEnabled(true);
 		}else{
 			showTie();
-			move = true;
-			try {
-				Thread.sleep(600);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			doMove();
 		}
 		
 		// The player must be able to start the next tie round after the dialog closes.
@@ -150,6 +143,16 @@ public class FlipActions extends DeckActions implements IFlipActions{
 		}
 		
 		rulesEngine.gameover(boardPage);
+		if(rulesEngine.isGameFinished()){
+			return;
+		}
+		// Wait until winnings are awarded before treating the human as eliminated.
+		if(result != -1 && rulesEngine.getPlayerCards() == 0
+				&& rulesEngine.getPlayerWinningCards() == 0){
+			autoPlay = true;
+			flip.setEnabled(false);
+			shuffle.setEnabled(false);
+		}
 		
 		cpuShuffle();
 		
@@ -232,6 +235,10 @@ public class FlipActions extends DeckActions implements IFlipActions{
 	}
 	
 	public void doMove(){
+		if(autoPlay && !move && !rulesEngine.isGameFinished()){
+			move = true;
+			flipFlag = true;
+		}
 		if(move && flipFlag){
 			moveCounter = 0;
 			ArrayList<Integer> tieResults = null;
@@ -283,7 +290,9 @@ public class FlipActions extends DeckActions implements IFlipActions{
 	}
 
 	private void showTieResults(String winner){
-		new TieResults(winner, winnings, tieRounds, properties, boardPage).show(boardPage);
+		if(!autoPlay){
+			new TieResults(winner, winnings, tieRounds, properties, boardPage).show(boardPage);
+		}
 		tieRounds = 0;
 	}
 }
